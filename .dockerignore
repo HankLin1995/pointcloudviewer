@@ -1,0 +1,9 @@
+.git
+**/.git
+.pytest_cache
+__pycache__
+*.pyc
+runtime
+Task-of-2026-05-09T002602746Z-all
+docs
+tests

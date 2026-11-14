@@ -1,0 +1,27 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./Task-of-2026-05-09T002602746Z-all/entwine_pointcloud:/data/pointcloud:ro
+      - digital-twin-runtime:/runtime
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    depends_on:
+      - backend
+    ports:
+      - "8501:8501"
+    environment:
+      API_BASE_URL: http://backend:8000
+      PUBLIC_APP_URL: http://127.0.0.1:8000
+    restart: unless-stopped
+
+volumes:
+  digital-twin-runtime:

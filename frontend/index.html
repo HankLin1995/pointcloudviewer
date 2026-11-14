@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="以互動式三維點雲探索 WebODM 空拍測繪成果。"
+    />
+    <title>空拍數位地景｜互動式 3D 點雲</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="stylesheet"
+      href="/potree_component/vendor/potree/build/potree/potree.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/potree_component/vendor/potree/libs/jquery-ui/jquery-ui.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/potree_component/vendor/potree/libs/openlayers3/ol.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/potree_component/vendor/potree/libs/spectrum/spectrum.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/potree_component/vendor/potree/libs/jstree/themes/mixed/style.css"
+    />
+    <link rel="stylesheet" href="/assets/app.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#viewer">跳到三維地景</a>
+
+    <main class="experience-shell">
+      <section id="viewer" class="viewer-stage" aria-label="互動式三維點雲">
+        <div id="potree-render-area" class="potree-render-area"></div>
+
+        <header class="topbar glass-panel">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48" role="img">
+              <path d="M7 31.5 17.5 17 24 24l6.5-9L41 31.5" />
+              <path d="M9 35.5h30" />
+              <circle cx="35" cy="10" r="3" />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <p class="eyebrow">DIGITAL TERRAIN / 2026</p>
+            <h1 id="project-title">空拍數位地景</h1>
+          </div>
+          <div class="topbar-actions">
+            <button
+              id="measurement-toggle"
+              class="measurement-toggle-button"
+              type="button"
+              aria-expanded="false"
+              aria-controls="measurement-panel"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 17 17 4l3 3L7 20H4v-3Z" />
+                <path d="m13 8 3 3M9.5 11.5l2 2M6 15l2 2" />
+              </svg>
+              <span>量測</span>
+            </button>
+            <button id="share-button" class="icon-button" type="button" aria-label="分享本頁">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="18" cy="5" r="2.5" />
+                <circle cx="6" cy="12" r="2.5" />
+                <circle cx="18" cy="19" r="2.5" />
+                <path d="m8.2 10.8 7.5-4.4M8.2 13.2l7.5 4.4" />
+              </svg>
+            </button>
+            <button id="about-button" class="text-button" type="button">關於資料</button>
+          </div>
+        </header>
+
+        <aside class="story-card glass-panel" aria-live="polite">
+          <p class="section-kicker">從空中，重新認識土地</p>
+          <h2 id="project-subtitle">從空拍影像重建的三維地景</h2>
+          <p id="project-description">
+            正在讀取測區資訊，請稍候。
+          </p>
+          <dl class="project-stats">
+            <div>
+              <dt>點雲數量</dt>
+              <dd id="point-count">—</dd>
+            </div>
+            <div>
+              <dt>地面解析度</dt>
+              <dd>2.25 cm</dd>
+            </div>
+            <div>
+              <dt>座標系統</dt>
+              <dd id="epsg">—</dd>
+            </div>
+          </dl>
+          <div class="gesture-hint">
+            <span class="mouse-glyph" aria-hidden="true"></span>
+            <span>拖曳旋轉 · 滾輪縮放 · 右鍵平移</span>
+          </div>
+        </aside>
+
+        <aside id="measurement-panel" class="measurement-panel glass-panel" hidden>
+          <div class="measurement-heading">
+            <div>
+              <p class="section-kicker">MEASUREMENT</p>
+              <h2>地景量測</h2>
+            </div>
+            <button id="measurement-close" class="panel-close" type="button" aria-label="關閉量測工具">×</button>
+          </div>
+          <p id="measurement-status" class="measurement-status">
+            選擇工具後，在點雲上按左鍵標記；距離與面積以右鍵完成。
+          </p>
+          <div class="measurement-tools" role="group" aria-label="量測類型">
+            <button class="measure-tool" data-measure-tool="distance" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18 18 5M4 14v5h5M14 4h5v5" /></svg>
+              <span><strong>距離</strong><small>多點折線長度</small></span>
+            </button>
+            <button class="measure-tool" data-measure-tool="area" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 18 2-11 10-2 2 13Z" /><circle cx="7" cy="7" r="1" /><circle cx="17" cy="5" r="1" /><circle cx="19" cy="18" r="1" /><circle cx="5" cy="18" r="1" /></svg>
+              <span><strong>面積</strong><small>水平投影面積</small></span>
+            </button>
+            <button class="measure-tool" data-measure-tool="height" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16M4 7l3-3 3 3M4 17l3 3 3-3M13 5h7M13 19h7" /></svg>
+              <span><strong>高差</strong><small>兩點垂直差</small></span>
+            </button>
+            <button class="measure-tool" data-measure-tool="point" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M12 3v4M12 17v4M3 12h4M17 12h4" /></svg>
+              <span><strong>座標</strong><small>單點 X・Y・Z</small></span>
+            </button>
+          </div>
+          <div class="measurement-footer">
+            <span>單位：公尺／平方公尺</span>
+            <button id="clear-measurements" class="clear-measurements" type="button">清除全部</button>
+          </div>
+        </aside>
+
+        <nav class="viewer-toolbar glass-panel" aria-label="點雲顯示工具">
+          <div class="tool-group" role="group" aria-label="顯示模式">
+            <button class="tool-button is-active" data-color-mode="rgba" type="button">
+              <span class="swatch swatch-rgb"></span>真實色彩
+            </button>
+            <button class="tool-button" data-color-mode="elevation" type="button">
+              <span class="swatch swatch-height"></span>高程色階
+            </button>
+            <button class="tool-button" data-color-mode="classification" type="button">
+              <span class="swatch swatch-class"></span>地物分類
+            </button>
+          </div>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <label class="point-size-control">
+            <span>點尺寸</span>
+            <input id="point-size" type="range" min="0.5" max="3" value="1" step="0.25" />
+          </label>
+          <button id="reset-view" class="tool-button tool-button-icon" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6" />
+              <path d="M4 4v4.6h4.6" />
+            </svg>
+            回到全景
+          </button>
+          <button id="fullscreen-button" class="tool-button tool-button-icon" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5" />
+            </svg>
+            全螢幕
+          </button>
+        </nav>
+
+        <div id="loading-panel" class="loading-panel" role="status">
+          <div class="loading-orbit" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <p class="loading-title">正在建立三維地景</p>
+          <p id="loading-detail" class="loading-detail">讀取點雲索引…</p>
+        </div>
+
+        <div id="error-panel" class="error-panel glass-panel" hidden>
+          <p class="section-kicker">載入未完成</p>
+          <h2>暫時無法顯示三維地景</h2>
+          <p id="error-message">請重新整理頁面，或稍後再試。</p>
+          <button id="retry-button" class="primary-button" type="button">重新載入</button>
+        </div>
+
+        <div class="north-marker" aria-label="北向指示">
+          <span>N</span>
+          <svg viewBox="0 0 32 42" aria-hidden="true">
+            <path d="M16 2 27 36 16 29 5 36Z" />
+          </svg>
+        </div>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <dialog id="about-dialog" class="about-dialog">
+      <form method="dialog">
+        <button class="dialog-close" value="close" aria-label="關閉">×</button>
+        <p class="section-kicker">ABOUT THE DATA</p>
+        <h2>這片三維地景如何誕生？</h2>
+        <p>
+          本成果由 87 張 DJI 空拍影像，透過 WebODM 攝影測量流程重建，並使用
+          21 個地面控制點完成定位。畫面中的每一個彩色小點，都代表實際地表的一個三維位置。
+        </p>
+        <div class="about-grid">
+          <div><span>處理日期</span><strong>2026.05.09</strong></div>
+          <div><span>點雲高度</span><strong>89.77–137.62 m</strong></div>
+          <div><span>技術格式</span><strong>Entwine EPT</strong></div>
+          <div><span>展示引擎</span><strong>Potree WebGL</strong></div>
+        </div>
+        <p class="data-note">
+          本頁提供地景認識與公開展示使用；若作為測量或工程判斷依據，仍應參照正式成果與精度報告。
+        </p>
+      </form>
+    </dialog>
+
+    <noscript>本頁需要 JavaScript 才能顯示互動式三維點雲。</noscript>
+
+    <script src="/potree_component/vendor/potree/libs/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/potree_component/vendor/potree/libs/spectrum/spectrum.js"></script>
+    <script src="/potree_component/vendor/potree/libs/jquery-ui/jquery-ui.min.js"></script>
+    <script src="/potree_component/vendor/potree/libs/other/BinaryHeap.js"></script>
+    <script src="/potree_component/vendor/potree/libs/tween/tween.min.js"></script>
+    <script src="/potree_component/vendor/potree/libs/d3/d3.js"></script>
+    <script src="/potree_component/vendor/potree/libs/proj4/proj4.js"></script>
+    <script src="/potree_component/vendor/potree/libs/openlayers3/ol.js"></script>
+    <script src="/potree_component/vendor/potree/libs/i18next/i18next.js"></script>
+    <script src="/potree_component/vendor/potree/libs/jstree/jstree.js"></script>
+    <script src="/potree_component/vendor/potree/libs/copc/index.js"></script>
+    <script src="/potree_component/vendor/potree/build/potree/potree.js"></script>
+    <script src="/potree_component/vendor/potree/libs/plasio/js/laslaz.js"></script>
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>
