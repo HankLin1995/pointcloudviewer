@@ -23,5 +23,15 @@ services:
       PUBLIC_APP_URL: http://127.0.0.1:8000
     restart: unless-stopped
 
+  streamlit-preview:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8502:8501"
+    volumes:
+      - ./frontend/static:/app/frontend/static
+    restart: unless-stopped
+
 volumes:
   digital-twin-runtime:
